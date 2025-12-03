@@ -1,0 +1,154 @@
+version: "3.9"
+
+services:
+
+  # ==========================
+  # MONGO FOR ACCOUNT SERVICE
+  # ==========================
+  mongo-accounts:
+    image: mongo:6
+    container_name: mongo-accounts
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-accounts-data:/data/db
+    networks:
+      - banking-network
+
+  # ==========================
+  # MONGO FOR TRANSACTION SERVICE
+  # ==========================
+  mongo-transactions:
+    image: mongo:6
+    container_name: mongo-transactions
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-transactions-data:/data/db
+    networks:
+      - banking-network
+
+  # ==========================
+  # CONFIG SERVER
+  # ==========================
+  config-server:
+    build:
+      context: ./config-server
+      dockerfile: Dockerfile
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    environment:
+      SPRING_PROFILES_ACTIVE: native
+    volumes:
+      - ./config-repo:/config-repo:ro
+    networks:
+      - banking-network
+
+  # ==========================
+  # EUREKA SERVER
+  # ==========================
+  eureka-server:
+    build:
+      context: ./eureka-server
+      dockerfile: Dockerfile
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    depends_on:
+      - config-server
+    networks:
+      - banking-network
+
+  # ==========================
+  # ACCOUNT SERVICE
+  # ==========================
+  account-service:
+    build:
+      context: ./account-service
+      dockerfile: Dockerfile
+    container_name: account-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mongo-accounts
+      - eureka-server
+      - config-server
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    networks:
+      - banking-network
+
+  # ==========================
+  # TRANSACTION SERVICE
+  # ==========================
+  transaction-service:
+    build:
+      context: ./transaction-service
+      dockerfile: Dockerfile
+    container_name: transaction-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mongo-transactions
+      - account-service
+      - eureka-server
+      - config-server
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    networks:
+      - banking-network
+
+  # ==========================
+  # NOTIFICATION SERVICE
+  # ==========================
+  notification-service:
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
+    container_name: notification-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      - eureka-server
+      - config-server
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    networks:
+      - banking-network
+
+  # ==========================
+  # API GATEWAY
+  # ==========================
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - account-service
+      - transaction-service
+      - notification-service
+      - eureka-server
+      - config-server
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    networks:
+      - banking-network
+
+
+# ==========================
+# VOLUMES
+# ==========================
+volumes:
+  mongo-accounts-data:
+  mongo-transactions-data:
+
+# ==========================
+# NETWORK
+# ==========================
+networks:
+  banking-network:
+    driver: bridge

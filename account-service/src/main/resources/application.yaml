@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: account-service
+  config:
+    import: "optional:configserver:http://config-serverconfig-server:8888"
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [%X{correlationId}] %logger{36} - %msg%n"
+

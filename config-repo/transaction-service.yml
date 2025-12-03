@@ -1,0 +1,37 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: transaction-service
+
+  data:
+    mongodb:
+      uri: mongodb://mongo-transactions:27017/transactions_db
+
+feign:
+  circuitbreaker:
+    enabled: true
+  hystrix:
+    enabled: false
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      accountServiceCB:
+        slidingWindowSize: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 5s
+      notificationCB:
+        slidingWindowSize: 5
+        failureRateThreshold: 50
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/
+
+  instance:
+    app-name: transaction-service
+    instance-id: transaction-service
+    prefer-ip-address: true

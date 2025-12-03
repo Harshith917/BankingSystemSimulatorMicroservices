@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: transaction-service
+  config:
+    import: "optional:configserver:http://config-server:8888"
+
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
+      fail-on-missing-service: false
+
+feign:
+  okhttp:
+    enabled: true
+
+logging:
+  level:
+    com.bankingSystem.feign: DEBUG
+    com.bankingSystem.service: DEBUG
+    com.bankingSystem: DEBUG
+
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [%X{correlationId}] %logger{36} - %msg%n"

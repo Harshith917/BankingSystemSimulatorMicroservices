@@ -1,0 +1,18 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-server
+
+  profiles:
+    active: native  # use local folder instead of git
+
+  cloud:
+    config:
+      server:
+        native:
+          # path relative to config-server project
+          # config-server/
+          # ../config-repo/
+          search-locations: file:/config-repo
