@@ -187,6 +187,8 @@ Notification Service
 MongoDB containers
 
 🌐 Service URLs
+
+
 Service	URL
 API Gateway	http://localhost:8080
 
