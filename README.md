@@ -79,16 +79,8 @@ When notification-service is DOWN,
 
 
 📁 Project Structure
-banking-microservices/
-│
-├── api-gateway/
-├── account-service/
-├── transaction-service/
-├── notification-service/
-├── eureka-server/
-├── config-server/
-├── config-repo/
-└── docker-compose.yml
+<img width="304" height="330" alt="image" src="https://github.com/user-attachments/assets/216c5b4f-325c-4c5c-86ff-ff28ab0de621" />
+
 
 ⭐ Features
 ✔ Account Service
