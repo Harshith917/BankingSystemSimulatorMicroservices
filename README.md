@@ -76,6 +76,8 @@ When notification-service is DOWN,
 <img width="1114" height="747" alt="Screenshot 2025-12-04 013153" src="https://github.com/user-attachments/assets/0d533923-6ba7-40e5-8420-a2be4b481101" />
 
 
+
+
 📁 Project Structure
 banking-microservices/
 │
